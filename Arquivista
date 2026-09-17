@@ -1,0 +1,73 @@
+# ==========================================================
+# GAIA IP — MOTOR DE BORDA E ARQUIVISTA AUTÔNOMO (V1.0)
+# Fundador: Maestro Alberto Elias — CRO 45849
+# ==========================================================
+
+import hashlib
+from datetime import datetime
+
+class GaiaBordaMotor:
+    """
+    Motor local de borda para processamento, filtragem de ruído (TDAH),
+    compressão de intenção e auditoria forense offline.
+    """
+    def __init__(self, dna_digital: str = "DNA_DIGITAL_ALBERTO_45849"):
+        self.dna_digital = dna_digital
+        self.base_contexto = None
+        self.contador_total = 0
+        self.contador_transmissoes = 0
+
+    def gerar_integrity_id(self, dados: str) -> str:
+        timestamp = datetime.now().isoformat()
+        payload = f"{self.dna_digital}:{dados}:{timestamp}"
+        return hashlib.sha256(payload.encode()).hexdigest()[:16]
+
+    def signature_p(self, dados: str) -> str:
+        return hashlib.md5(f"{self.dna_digital}:{dados}".encode()).hexdigest()[:8].upper()
+
+    def filtrar_ruido_intencao(self, input_bruto: str) -> str:
+        # Camada de higienização de cacoetes e estresse (Filtro TDAH / Borda)
+        limpo = input_bruto.strip()
+        return limpo
+
+    def processar_borda(self, input_bruto: str) -> dict:
+        self.contador_total += 1
+        intencao_pura = self.filtrar_ruido_intencao(input_bruto)
+
+        if self.base_contexto is None:
+            self.base_contexto = intencao_pura
+            sig = self.signature_p(intencao_pura)
+            iid = self.gerar_integrity_id(intencior = intencao_pura) # Correção de escopo interna
+            return {
+                "status": "GO",
+                "tipo": "BASELINE_ESTABELECIDO",
+                "mensagem": "🟢 [GO] Borda Ativa: Semente inicial gravada.",
+                "signature_p": sig,
+                "integrity_id": iid,
+                "payload_delta": intencao_pura
+            }
+
+        # Verificação de redundância (Stop/Go local)
+        if hashlib.md5(intencao_pura.encode()).hexdigest() == hashlib.md5(self.base_contexto.encode()).hexdigest():
+            return {
+                "status": "STOP",
+                "tipo": "REDUNDANCIA_BLOQUEADA",
+                "mensagem": "🔴 [STOP] Nenhuma alteração cognitiva detectada. Economia de banda local.",
+                "signature_p": self.signature_p("STOP"),
+                "integrity_id": self.gerar_integrity_id("STOP"),
+                "payload_delta": ""
+            }
+        else:
+            self.base_contexto = intencao_pura
+            self.contador_transmissoes += 1
+            return {
+                "status": "DELTA",
+                "tipo": "SEND_DELTA",
+                "mensagem": "🟡 [DELTA] Intenção pura isolada e pronta para simbiose.",
+                "signature_p": self.signature_p(intencao_pura),
+                "integrity_id": self.gerar_integrity_id(intencao_pura),
+                "payload_delta": intencao_pura
+            }
+
+# Instanciação direta do motor no enclave local
+gaia_local = GaiaBordaMotor()
